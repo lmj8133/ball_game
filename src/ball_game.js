@@ -73,36 +73,37 @@ function draw()
     renderPlayer(player3);
     renderPlayer(player4);
 
-
-    //if(x + dx > canvas.width-ballRadius || x + dx < ballRadius) {
-    //dx = -dx;
-    //}
-    //if(y + dy > canvas.height-ballRadius || y + dy < ballRadius) {
-    //dy = -dy;
-    //}
-    if (((x + dx > canvas.width-ballRadius) && ((y < player4.y + (player4.height)) && (y > player4.y))) ||
-            ((x + dx < ballRadius) && ((y < player2.y + (player2.height)) && (y > player2.y)))) {
+    /*
+    if(x + dx > canvas.width-ballRadius || x + dx < ballRadius) {
+        dx = -dx;
+    }
+    if(y + dy > canvas.height-ballRadius || y + dy < ballRadius) {
+        dy = -dy;
+    }
+    */
+    if (((x > canvas.width-ballRadius) && ((y < player4.y + (player4.height)) && (y > player4.y))) ||
+            ((x < ballRadius) && ((y < player2.y + (player2.height)) && (y > player2.y)))) {
         dx = -dx;
         speed_count++;
         //alert(`Keypress: The key pressed is ${speed_count} and the code value is ${speed_count / 10}`);
         dx *= ((speed_count / 100) + 1);
     }
-    if (((y + dy > canvas.height-ballRadius) && ((x < player3.x + (player3.width)) && (x > player3.x))) ||
-            ((y + dy < ballRadius) && ((x < player1.x + (player1.width)) && (x > player1.x)))) {
+    if (((y > canvas.height-ballRadius) && ((x < player3.x + (player3.width)) && (x > player3.x))) ||
+            ((y < ballRadius) && ((x < player1.x + (player1.width)) && (x > player1.x)))) {
         dy = -dy;
         speed_count++;
         //alert(`Keypress: The key pressed is ${speed_count} and the code value is ${speed_count / 10}`);
         dy *= ((speed_count / 100) + 1);
     }
 
+    if (x < 0 || y < 0 || x > canvas.width || y > canvas.height) {
+        alert(`Game Over`);
+    }
 
     x += dx;
     y += dy;
 
 
-    if (x < 0 || y < 0 || x > canvas.width || y > canvas.height) {
-        alert(`Game Over`);
-    }
 }
 
 function remote(obj, key_code, left_up, right_down)
