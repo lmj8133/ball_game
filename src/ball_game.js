@@ -66,6 +66,8 @@ function drawBall()
 
 function draw()
 {
+    var angle_x = 1;
+    var angle_y = 1;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawBall();
     renderPlayer(player1);
@@ -81,27 +83,60 @@ function draw()
         dy = -dy;
     }
     */
+    /*
     if (((x > canvas.width-ballRadius) && ((y < player4.y + (player4.height)) && (y > player4.y))) ||
             ((x < ballRadius) && ((y < player2.y + (player2.height)) && (y > player2.y)))) {
         dx = -dx;
         speed_count++;
         //alert(`Keypress: The key pressed is ${speed_count} and the code value is ${speed_count / 10}`);
-        dx *= ((speed_count / 100) + 1);
+        dx *= ((speed_count / 500) + 1);
     }
     if (((y > canvas.height-ballRadius) && ((x < player3.x + (player3.width)) && (x > player3.x))) ||
             ((y < ballRadius) && ((x < player1.x + (player1.width)) && (x > player1.x)))) {
         dy = -dy;
         speed_count++;
         //alert(`Keypress: The key pressed is ${speed_count} and the code value is ${speed_count / 10}`);
-        dy *= ((speed_count / 100) + 1);
+        dy *= ((speed_count / 500) + 1);
+    }
+    */
+    if ((x > canvas.width-ballRadius) && ((y < player4.y + (player4.height)) && (y > player4.y))) {
+        dx = -dx;
+        speed_count++;
+        //alert(`Keypress: The key pressed is ${speed_count} and the code value is ${speed_count / 10}`);
+        dx *= ((speed_count / 500) + 1);
+        angle_x = (Math.abs(y - (player4.y + (player4.height / 2))) / player4.height) + 1;
+    }
+
+    if ((x < ballRadius) && ((y < player2.y + (player2.height)) && (y > player2.y))) {
+        dx = -dx;
+        speed_count++;
+        //alert(`Keypress: The key pressed is ${speed_count} and the code value is ${speed_count / 10}`);
+        dx *= ((speed_count / 500) + 1);
+        angle_x = (Math.abs(y - (player2.y + (player2.height / 2))) / player2.height) + 1;
+    }
+
+    if ((y > canvas.height-ballRadius) && ((x < player3.x + (player3.width)) && (x > player3.x))) {
+        dy = -dy;
+        speed_count++;
+        //alert(`Keypress: The key pressed is ${speed_count} and the code value is ${speed_count / 10}`);
+        dy *= ((speed_count / 500) + 1);
+        angle_y = (Math.abs(x - (player3.x + (player3.width / 2))) / player3.width) + 1;
+    }
+
+    if ((y < ballRadius) && ((x < player1.x + (player1.width)) && (x > player1.x))) {
+        dy = -dy;
+        speed_count++;
+        //alert(`Keypress: The key pressed is ${speed_count} and the code value is ${speed_count / 10}`);
+        dy *= ((speed_count / 500) + 1);
+        angle_y = (Math.abs(x - (player1.x + (player1.width / 2))) / player1.width) + 1;
     }
 
     if (x < 0 || y < 0 || x > canvas.width || y > canvas.height) {
         alert(`Game Over`);
     }
 
-    x += dx;
-    y += dy;
+    x += dx * angle_x;
+    y += dy * angle_y;
 
 
 }
