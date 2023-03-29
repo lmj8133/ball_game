@@ -12,17 +12,17 @@ var speed_count = 0;
 var player1 = {
     id: 1,
     height: 10,
-    width: 100,
-    x: canvas.width / 3,
+    width: canvas.height,
+    x: 0,
     y: 0,
-    color: "#FF0000"	// red
+    color: "#000000"	// red
 };
 var player2 = {
     id: 2,
-    height: 100,
+    height: canvas.height,
     width: 10,
     x: 0,
-    y: canvas.height / 3,
+    y: 0,
     color: "#000000"	// black
 };
 var player3 = {
@@ -35,11 +35,11 @@ var player3 = {
 };
 var player4 = {
     id: 4,
-    height: 100,
+    height: canvas.height,
     width: 10,
     x: canvas.width - 10,
-    y: canvas.height / 3,
-    color: "#008000"	// green
+    y: 0,
+    color: "#000000"	// green
 };
 
 function renderPlayer(object)
@@ -99,11 +99,13 @@ function draw()
         //alert(`Keypress: The key pressed is ${speed_count} and the code value is ${speed_count / 10}`);
         dx *= ((speed_count / 200) + 1);
         angle_x += (Math.abs(y - (player4.y + (player4.height / 2))) / player4.height);
+        /*
         if ((y - (player4.y + (player4.height / 2))) > 0) {
             dy = -dy
         } else if ((y - (player4.y + (player4.height / 2))) == 0) {
             dy = 0;
         }
+        */
     }
 
     if ((x < ballRadius) && ((y < player2.y + (player2.height)) && (y > player2.y))) {
@@ -112,11 +114,13 @@ function draw()
         //alert(`Keypress: The key pressed is ${speed_count} and the code value is ${speed_count / 10}`);
         dx *= ((speed_count / 200) + 1);
         angle_x += (Math.abs(y - (player2.y + (player2.height / 2))) / player2.height);
+        /*
         if ((y - (player2.y + (player2.height / 2))) > 0) {
             dy = -dy
         } else if ((y - (player2.y + (player2.height / 2))) == 0) {
             dy = 0;
         }
+        */
     }
 
     if ((y > canvas.height - ballRadius) && ((x < player3.x + (player3.width)) && (x > player3.x))) {
@@ -125,11 +129,13 @@ function draw()
         //alert(`Keypress: The key pressed is ${speed_count} and the code value is ${speed_count / 10}`);
         dy *= ((speed_count / 200) + 1);
         angle_y += (Math.abs(x - (player3.x + (player3.width / 2))) / player3.width);
+        /*
         if ((x - (player3.x + (player3.height / 2))) < 0) {
             dx = -dx
         } else if ((x - (player3.x + (player3.height / 2))) == 0) {
             dx = 0;
         }
+        */
     }
 
     if ((y < ballRadius) && ((x < player1.x + (player1.width)) && (x > player1.x))) {
@@ -138,11 +144,13 @@ function draw()
         //alert(`Keypress: The key pressed is ${speed_count} and the code value is ${speed_count / 10}`);
         dy *= ((speed_count / 200) + 1);
         angle_y += (Math.abs(x - (player1.x + (player1.width / 2))) / player1.width);
+        /*
         if ((x - (player1.x + (player1.height / 2))) < 0) {
             dx = -dx
         } else if ((x - (player1.x + (player1.height / 2))) == 0) {
             dx = 0;
         }
+        */
     }
 
     if (x < 0 || y < 0 || x > canvas.width || y > canvas.height) {
@@ -192,10 +200,13 @@ document.addEventListener('keydown', (event) =>
     var keyCode = event.code;
     //alert(`Keypress: The key pressed is ${keyName} and the code value is ${keyCode}`);
     //alert(`Keypress: The key pressed is ${player4.y} and the code value is ${y}`);
+    /*
     remote (player1, keyCode, 'KeyJ', 'KeyK');
     remote (player2, keyCode, 'Digit1', 'KeyQ');
     remote (player3, keyCode, 'KeyD', 'KeyF');
     remote (player4, keyCode, 'Equal', 'BracketLeft');
+    */
+    remote (player3, keyCode, 'KeyJ', 'KeyL');
 
 }, false);
 
