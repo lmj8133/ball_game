@@ -6,6 +6,7 @@ var y = canvas.height-30;
 var dx = 2;
 var dy = -2;
 var gStep = 5;
+var speed_count = 0;
 var player1 = {
     id: 1,
     height: 10,
@@ -82,19 +83,26 @@ function draw()
     if (((x + dx > canvas.width-ballRadius) && ((y < player4.y + (player4.height)) && (y > player4.y))) ||
             ((x + dx < ballRadius) && ((y < player2.y + (player2.height)) && (y > player2.y)))) {
         dx = -dx;
+        speed_count++;
+        //alert(`Keypress: The key pressed is ${speed_count} and the code value is ${speed_count / 10}`);
+        dx *= ((speed_count / 100) + 1);
     }
     if (((y + dy > canvas.height-ballRadius) && ((x < player3.x + (player3.width)) && (x > player3.x))) ||
             ((y + dy < ballRadius) && ((x < player1.x + (player1.width)) && (x > player1.x)))) {
         dy = -dy;
+        speed_count++;
+        //alert(`Keypress: The key pressed is ${speed_count} and the code value is ${speed_count / 10}`);
+        dy *= ((speed_count / 100) + 1);
     }
 
 
     x += dx;
     y += dy;
 
-    //if (x < 0 || y < 0 || x > canvas.width || y > canvas.height) {
-    //alert(`Game Over`);
-    //}
+
+    if (x < 0 || y < 0 || x > canvas.width || y > canvas.height) {
+        alert(`Game Over`);
+    }
 }
 
 function remote(obj, key_code, left_up, right_down)
