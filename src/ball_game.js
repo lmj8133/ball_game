@@ -9,6 +9,7 @@ var last_dx = dx;
 var last_dy = dy;
 var step = 5;
 var speed_count = 0;
+var rebound = false;
 var player1 = {
     id: 1,
     height: 10,
@@ -93,7 +94,8 @@ function draw()
         dy *= ((speed_count / 500) + 1);
     }
     */
-    if ((x > canvas.width - ballRadius) && ((y < player4.y + (player4.height)) && (y > player4.y))) {
+    if ((x > canvas.width - ballRadius - 10) && ((y < player4.y + (player4.height)) && (y > player4.y))) {
+        rebound = true;
         dx = -dx;
         speed_count++;
         //alert(`Keypress: The key pressed is ${speed_count} and the code value is ${speed_count / 10}`);
@@ -106,7 +108,8 @@ function draw()
         }
     }
 
-    if ((x < ballRadius) && ((y < player2.y + (player2.height)) && (y > player2.y))) {
+    if ((x < ballRadius + 10) && ((y < player2.y + (player2.height)) && (y > player2.y))) {
+        rebound = true;
         dx = -dx;
         speed_count++;
         //alert(`Keypress: The key pressed is ${speed_count} and the code value is ${speed_count / 10}`);
@@ -119,7 +122,8 @@ function draw()
         }
     }
 
-    if ((y > canvas.height - ballRadius) && ((x < player3.x + (player3.width)) && (x > player3.x))) {
+    if ((y > canvas.height - ballRadius - 10) && ((x < player3.x + (player3.width)) && (x > player3.x))) {
+        rebound = true;
         dy = -dy;
         speed_count++;
         //alert(`Keypress: The key pressed is ${speed_count} and the code value is ${speed_count / 10}`);
@@ -132,7 +136,8 @@ function draw()
         }
     }
 
-    if ((y < ballRadius) && ((x < player1.x + (player1.width)) && (x > player1.x))) {
+    if ((y < ballRadius + 10) && ((x < player1.x + (player1.width)) && (x > player1.x))) {
+        rebound = true;
         dy = -dy;
         speed_count++;
         //alert(`Keypress: The key pressed is ${speed_count} and the code value is ${speed_count / 10}`);
@@ -145,8 +150,18 @@ function draw()
         }
     }
 
+    if (rebound == true) {
+        //alert(`x: ${x}, y: ${y}, dx: ${dx}, dy: ${dy}`);
+        if (x < 0) x = 0;
+        if (y < 0) y = 0;
+        if (x > canvas.width) x = canvas.width;
+        if (y > canvas.height) y = canvas.height;
+        rebound = false;
+    }
+
     if (x < 0 || y < 0 || x > canvas.width || y > canvas.height) {
         alert(`Game Over`);
+        window.location.reload();
     }
 
     x += dx * angle_x;
@@ -196,6 +211,9 @@ document.addEventListener('keydown', (event) =>
     remote (player2, keyCode, 'Digit1', 'KeyQ');
     remote (player3, keyCode, 'KeyD', 'KeyF');
     remote (player4, keyCode, 'Equal', 'BracketLeft');
+    if (keyCode == 'KeyM') {
+        alert(`x: ${x}, y: ${y}, dx: ${dx}, dy: ${dy}`);
+    }
 
 }, false);
 
