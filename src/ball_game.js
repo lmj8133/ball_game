@@ -9,6 +9,7 @@ var last_dx = dx;
 var last_dy = dy;
 var step = 5;
 var speed_count = 0;
+var restart = false;
 var player1 = {
     id: 1,
     height: 10,
@@ -153,8 +154,15 @@ function draw()
         */
     }
 
+
     if (x < 0 || y < 0 || x > canvas.width || y > canvas.height) {
-        alert(`Game Over`);
+        if (restart) {
+            window.location.reload();
+
+        } else {
+            alert(`Game Over`);
+            restart = true;
+        }
     }
 
     x += dx * angle_x;
