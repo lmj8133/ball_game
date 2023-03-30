@@ -3,16 +3,17 @@ var ctx = canvas.getContext("2d");
 var ballRadius = 10;
 var x = canvas.width / 2;
 var y = canvas.height - 30;
-var dx = 2;
-var dy = -2;
+var dx = 4;
+var dy = -4;
 var last_dx = dx;
 var last_dy = dy;
-var step = 5;
+var step = 30;
 var speed_count = 0;
+var rebound = false;
 var player1 = {
     id: 1,
     height: 10,
-    width: canvas.height,
+    width: canvas.width,
     x: 0,
     y: 0,
     color: "#000000"	// red
@@ -28,7 +29,7 @@ var player2 = {
 var player3 = {
     id: 3,
     height: 10,
-    width: 100,
+    width: 200,
     x: canvas.width / 3,
     y: canvas.height - 10,
     color: "#FFA500"	// orange
@@ -94,73 +95,87 @@ function draw()
     }
     */
     if ((x > canvas.width - ballRadius) && ((y < player4.y + (player4.height)) && (y > player4.y))) {
+        rebound = true;
         dx = -dx;
         speed_count++;
         //alert(`Keypress: The key pressed is ${speed_count} and the code value is ${speed_count / 10}`);
-        dx *= ((speed_count / 200) + 1);
+        //dx *= ((speed_count / 10) + 1);
         angle_x += (Math.abs(y - (player4.y + (player4.height / 2))) / player4.height);
-        /*
         if ((y - (player4.y + (player4.height / 2))) > 0) {
             dy = -dy
         } else if ((y - (player4.y + (player4.height / 2))) == 0) {
             dy = 0;
         }
-        */
     }
 
     if ((x < ballRadius) && ((y < player2.y + (player2.height)) && (y > player2.y))) {
+        rebound = true;
         dx = -dx;
         speed_count++;
         //alert(`Keypress: The key pressed is ${speed_count} and the code value is ${speed_count / 10}`);
-        dx *= ((speed_count / 200) + 1);
+        //dx *= ((speed_count / 10) + 1);
         angle_x += (Math.abs(y - (player2.y + (player2.height / 2))) / player2.height);
-        /*
         if ((y - (player2.y + (player2.height / 2))) > 0) {
             dy = -dy
         } else if ((y - (player2.y + (player2.height / 2))) == 0) {
             dy = 0;
         }
-        */
     }
 
     if ((y > canvas.height - ballRadius) && ((x < player3.x + (player3.width)) && (x > player3.x))) {
+        rebound = true;
         dy = -dy;
         speed_count++;
         //alert(`Keypress: The key pressed is ${speed_count} and the code value is ${speed_count / 10}`);
-        dy *= ((speed_count / 200) + 1);
+        //dy *= ((speed_count / 10) + 1);
         angle_y += (Math.abs(x - (player3.x + (player3.width / 2))) / player3.width);
-        /*
         if ((x - (player3.x + (player3.height / 2))) < 0) {
             dx = -dx
         } else if ((x - (player3.x + (player3.height / 2))) == 0) {
             dx = 0;
         }
-        */
     }
 
     if ((y < ballRadius) && ((x < player1.x + (player1.width)) && (x > player1.x))) {
+        rebound = true;
         dy = -dy;
         speed_count++;
         //alert(`Keypress: The key pressed is ${speed_count} and the code value is ${speed_count / 10}`);
-        dy *= ((speed_count / 200) + 1);
+        //dy *= ((speed_count / 10) + 1);
         angle_y += (Math.abs(x - (player1.x + (player1.width / 2))) / player1.width);
-        /*
         if ((x - (player1.x + (player1.height / 2))) < 0) {
             dx = -dx
         } else if ((x - (player1.x + (player1.height / 2))) == 0) {
             dx = 0;
         }
-        */
     }
 
+    if (rebound == true) {
+        if (x < 0) x = 0;
+        if (y < 0) y = 0;
+        if (x > canvas.width) x = canvas.width;
+        if (y > canvas.height) y = canvas.height;
+        rebound = false;
+    }
 
     if (x < 0 || y < 0 || x > canvas.width || y > canvas.height) {
-        alert(`Game Over`);
+        alert(`Game Over, {x: ${x}, y: ${y}, dx: ${dx}, dy: ${dy}}`);
         window.location.reload();
     }
 
+    /*
+    if (dx > 4 || dy > 4) {
+        dx = 4;
+        dy = 4;
+    }
+    */
+
+    /*
     x += dx * angle_x;
     y += dy * angle_y;
+    */
+    x += dx;
+    y += dy;
 
     if (dx == 0) {
         dx = last_dx;
