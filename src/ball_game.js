@@ -28,135 +28,170 @@ let player2Score = 0;
 var keyCode;
 
 // Draw the game board, paddles, and puck
-function draw() {
-  // Clear the canvas
-  context.clearRect(0, 0, boardWidth, boardHeight);
+function draw()
+{
+    // Clear the canvas
+    context.clearRect(0, 0, boardWidth, boardHeight);
 
-  // Draw the game board
-  context.beginPath();
-  context.rect(0, 0, boardWidth, boardHeight);
-  context.fillStyle = "#ffffff";
-  context.fill();
-  context.closePath();
+    // Draw the game board
+    context.beginPath();
+    context.rect(0, 0, boardWidth, boardHeight);
+    context.fillStyle = "#ffffff";
+    context.fill();
+    context.closePath();
 
-  // Draw the paddles
-  context.beginPath();
-  context.rect(0, player1PaddleY, paddleWidth, paddleHeight);
-  context.fillStyle = "#000000";
-  context.fill();
-  context.closePath();
+    // Draw the paddles
+    context.beginPath();
+    context.rect(0, player1PaddleY, paddleWidth, paddleHeight);
+    context.fillStyle = "#000000";
+    context.fill();
+    context.closePath();
 
-  context.beginPath();
-  context.rect(boardWidth - paddleWidth, player2PaddleY, paddleWidth, paddleHeight);
-  context.fillStyle = "#000000";
-  context.fill();
-  context.closePath();
+    context.beginPath();
+    context.rect(boardWidth - paddleWidth, player2PaddleY, paddleWidth, paddleHeight);
+    context.fillStyle = "#000000";
+    context.fill();
+    context.closePath();
 
-  // Draw the puck
-  context.beginPath();
-  context.arc(puckX, puckY, puckRadius, 0, Math.PI * 2);
-  context.fillStyle = "#000000";
-  context.fill();
-  context.closePath();
+    // Draw the puck
+    context.beginPath();
+    context.arc(puckX, puckY, puckRadius, 0, Math.PI * 2);
+    context.fillStyle = "#000000";
+    context.fill();
+    context.closePath();
 
-  // Draw the player scores
-  context.font = "30px Arial";
-  context.fillStyle = "#000000";
-  context.fillText(player1Score, 100, 50);
-  context.fillText(player2Score, boardWidth - 100, 50);
+    // Draw the player scores
+    context.font = "30px Arial";
+    context.fillStyle = "#000000";
+    context.fillText(player1Score, 100, 50);
+    context.fillText(player2Score, boardWidth - 100, 50);
 }
 
-// Move the paddles based on user input
-function movePaddles() {
-  document.addEventListener('keypress', function(event) {
-    if (keyCode  == 'KeyQ') {
-      // Move player 1 paddle up
-      if (player1PaddleY > 0) {
-        player1PaddleY -= paddleSpeed;
-        keyCode = null;
-        //alert(`${paddleSpeed}`);
-      }
-    } else if (keyCode  == 'KeyA') {
-      // Move player 1 paddle down
-      if (player1PaddleY < boardHeight - paddleHeight) {
-        player1PaddleY += paddleSpeed;
-        keyCode = null;
-        //alert(`${paddleSpeed}`);
-      }
-    } else if (keyCode  == 'KeyK') {
-      // Move player 2 paddle up
-      if (player2PaddleY > 0) {
-        player2PaddleY -= paddleSpeed;
-        keyCode = null;
-        //alert(`${paddleSpeed}`);
-      }
-    } else if (keyCode  == 'KeyJ') {
-      // Move player 2 paddle down
-      if (player2PaddleY < boardHeight - paddleHeight) {
-        player2PaddleY += paddleSpeed;
-        keyCode = null;
-        //alert(`${paddleSpeed}`);
-      }
+document.addEventListener('keyup', (event) =>
+{
+    //keyCode = event.code;
+    if (event.code == 'KeyQ') {
+        keyCode &= ~0x1;
     }
-    keyCode = event.code;
-  },);
+
+    if (event.code == 'KeyA') {
+        keyCode &= ~(0x1 << 1);
+    }
+
+    if (event.code == 'KeyK') {
+        keyCode &= ~(0x1 << 2);
+    }
+
+    if (event.code == 'KeyJ') {
+        keyCode &= ~(0x1 << 3);
+    }
+},)
+
+document.addEventListener('keydown', (event) =>
+{
+    //keyCode = event.code;
+    if (event.code == 'KeyQ') {
+        keyCode |= 0x1;
+    }
+
+    if (event.code == 'KeyA') {
+        keyCode |= (0x1 << 1);
+    }
+
+    if (event.code == 'KeyK') {
+        keyCode |= (0x1 << 2);
+    }
+
+    if (event.code == 'KeyJ') {
+        keyCode |= (0x1 << 3);
+    }
+
+    if (event.code == 'KeyM') {
+        alert(`pause`);
+    }
+},)
+
+// Move the paddles based on user input
+function movePaddles()
+{
+    if (keyCode & 0x1) {
+        // Move player 1 paddle up
+        if (player1PaddleY > 0) {
+            player1PaddleY -= paddleSpeed;
+        }
+    }
+    if (keyCode & (0x1 << 1)) {
+        // Move player 1 paddle down
+        if (player1PaddleY < boardHeight - paddleHeight) {
+            player1PaddleY += paddleSpeed;
+        }
+    }
+    if (keyCode & (0x1 << 2)) {
+        // Move player 2 paddle up
+        if (player2PaddleY > 0) {
+            player2PaddleY -= paddleSpeed;
+        }
+    }
+    if (keyCode & (0x1 << 3)) {
+        // Move player 2 paddle down
+        if (player2PaddleY < boardHeight - paddleHeight) {
+            player2PaddleY += paddleSpeed;
+        }
+    }
 }
 
 // Move the puck
-function movePuck() {
-  puckX += puckDx;
-  puckY += puckDy;
+function movePuck()
+{
+    puckX += puckDx;
+    puckY += puckDy;
 }
 
 // Detect collisions between the puck and the walls or paddles
-function detectCollisions() {
-  // Check for collisions with top and bottom walls
-  if (puckY < puckRadius || puckY > boardHeight - puckRadius) {
-    puckDy = -puckDy;
-  }
+function detectCollisions()
+{
+    // Check for collisions with top and bottom walls
+    if (puckY < puckRadius || puckY > boardHeight - puckRadius) {
+        puckDy = -puckDy;
+    }
 
-  // Check for collisions with paddles
-  if (puckX < paddleWidth && puckY > player1PaddleY && puckY < player1PaddleY + paddleHeight) {
-    puckDx = -puckDx;
-  } else if (puckX > boardWidth - paddleWidth && puckY > player2PaddleY && puckY < player2PaddleY + paddleHeight) {
-    puckDx = -puckDx;
-  }
+    // Check for collisions with paddles
+    if (puckX < paddleWidth && puckY > player1PaddleY && puckY < player1PaddleY + paddleHeight) {
+        puckDx = -puckDx;
+    } else if (puckX > boardWidth - paddleWidth && puckY > player2PaddleY && puckY < player2PaddleY + paddleHeight) {
+        puckDx = -puckDx;
+    }
 
-  // Check for goals
-  if (puckX < puckRadius) {
-    // Player 2 scored
-    player2Score++;
-    resetPuck();
-  } else if (puckX > boardWidth - puckRadius) {
-    // Player 1 scored
-    player1Score++;
-    resetPuck();
-  }
+    // Check for goals
+    if (puckX < puckRadius) {
+        // Player 2 scored
+        player2Score++;
+        resetPuck();
+    } else if (puckX > boardWidth - puckRadius) {
+        // Player 1 scored
+        player1Score++;
+        resetPuck();
+    }
 }
 
 // Reset the puck to the center of the board
-function resetPuck() {
-  puckX = boardWidth / 2;
-  puckY = boardHeight / 2;
-  puckDx = puckSpeed;
-  puckDy = puckSpeed;
+function resetPuck()
+{
+    puckX = boardWidth / 2;
+    puckY = boardHeight / 2;
+    puckDx = puckSpeed;
+    puckDy = puckSpeed;
 }
 
 // Update the game state and redraw the game
-function update() {
-  movePaddles();
-  movePuck();
-  detectCollisions();
-  draw();
-}
-
-function debug()
+function update()
 {
-    alert(`${keyCode}`);
+    movePaddles();
+    movePuck();
+    detectCollisions();
+    draw();
 }
-
 
 // Set up the game loop
 setInterval(update, 20);
-setInterval(debug, 1000);
 
