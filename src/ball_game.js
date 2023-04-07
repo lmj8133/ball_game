@@ -3,8 +3,8 @@ const canvas = document.getElementById("myCanvas");
 const context = canvas.getContext("2d");
 
 // Set up the game board
-const boardWidth = 400;
-const boardHeight = 400;
+const boardWidth = 1200;
+const boardHeight = 600;
 
 // Set up the paddles
 const paddleWidth = 10;
@@ -12,10 +12,12 @@ const paddleHeight = 50;
 const paddleSpeed = 5;
 let player1PaddleY = boardHeight / 2 - paddleHeight / 2;
 let player2PaddleY = boardHeight / 2 - paddleHeight / 2;
+let player1PaddleX = 0;
+let player2PaddleX = boardWidth - paddleWidth;
 
 // Set up the pucks
 const puckRadius = 10;
-const puckSpeed = 5;
+const puckSpeed = 1;
 let puckX = boardWidth / 2;
 let puckY = boardHeight / 2;
 let puckDx = puckSpeed;
@@ -42,13 +44,13 @@ function draw()
 
     // Draw the paddles
     context.beginPath();
-    context.rect(0, player1PaddleY, paddleWidth, paddleHeight);
+    context.rect(player1PaddleX, player1PaddleY, paddleWidth, paddleHeight);
     context.fillStyle = "#000000";
     context.fill();
     context.closePath();
 
     context.beginPath();
-    context.rect(boardWidth - paddleWidth, player2PaddleY, paddleWidth, paddleHeight);
+    context.rect(player2PaddleX, player2PaddleY, paddleWidth, paddleHeight);
     context.fillStyle = "#000000";
     context.fill();
     context.closePath();
@@ -69,7 +71,6 @@ function draw()
 
 document.addEventListener('keyup', (event) =>
 {
-    //keyCode = event.code;
     if (event.code == 'KeyQ') {
         keyCode &= ~0x1;
     }
@@ -85,11 +86,18 @@ document.addEventListener('keyup', (event) =>
     if (event.code == 'KeyJ') {
         keyCode &= ~(0x1 << 3);
     }
+
+    if (event.code == 'KeyZ') {
+        keyCode &= ~(0x1 << 4);
+    }
+
+    if (event.code == 'Space') {
+        keyCode &= ~(0x1 << 5);
+    }
 },)
 
 document.addEventListener('keydown', (event) =>
 {
-    //keyCode = event.code;
     if (event.code == 'KeyQ') {
         keyCode |= 0x1;
     }
@@ -104,6 +112,14 @@ document.addEventListener('keydown', (event) =>
 
     if (event.code == 'KeyJ') {
         keyCode |= (0x1 << 3);
+    }
+
+    if (event.code == 'KeyZ') {
+        keyCode |= (0x1 << 4);
+    }
+
+    if (event.code == 'Space') {
+        keyCode |= (0x1 << 5);
     }
 
     if (event.code == 'KeyM') {
@@ -126,6 +142,14 @@ function movePaddles()
             player1PaddleY += paddleSpeed;
         }
     }
+    if (keyCode & (0x1 << 4)) {
+        if (player1PaddleX < 5) {
+            player1PaddleX += paddleSpeed;
+        }
+    } else {
+        player1PaddleX = 0;
+
+    }
     if (keyCode & (0x1 << 2)) {
         // Move player 2 paddle up
         if (player2PaddleY > 0) {
@@ -137,6 +161,13 @@ function movePaddles()
         if (player2PaddleY < boardHeight - paddleHeight) {
             player2PaddleY += paddleSpeed;
         }
+    }
+    if ((keyCode & (0x1 << 5))) {
+        if (player2PaddleX > boardWidth - paddleWidth - 5) {
+            player2PaddleX -= 5;
+        }
+    } else {
+        player2PaddleX = boardWidth - paddleWidth;
     }
 }
 
@@ -156,10 +187,13 @@ function detectCollisions()
     }
 
     // Check for collisions with paddles
-    if (puckX < paddleWidth && puckY > player1PaddleY && puckY < player1PaddleY + paddleHeight) {
-        puckDx = -puckDx;
-    } else if (puckX > boardWidth - paddleWidth && puckY > player2PaddleY && puckY < player2PaddleY + paddleHeight) {
-        puckDx = -puckDx;
+    //if (puckX <= paddleWidth && puckY > player1PaddleY && puckY < player1PaddleY + paddleHeight) {
+    if (puckX <= player1PaddleX + paddleWidth && puckY > player1PaddleY && puckY < player1PaddleY + paddleHeight) {
+        puckDx = +puckSpeed;
+    //} else if (puckX == player2PaddleX && puckX >= boardWidth - paddleWidth && puckY > player2PaddleY && puckY < player2PaddleY + paddleHeight) {
+    } else if (puckX >= player2PaddleX && puckY > player2PaddleY && puckY < player2PaddleY + paddleHeight) {
+        puckDx = -puckSpeed;
+        //alert(`collision: ${puckX}, ${player2PaddleX}`);
     }
 
     // Check for goals
@@ -177,10 +211,12 @@ function detectCollisions()
 // Reset the puck to the center of the board
 function resetPuck()
 {
+    alert(`restart: ${puckX}, ${player1PaddleX}, ${player2PaddleX}`);
     puckX = boardWidth / 2;
     puckY = boardHeight / 2;
     puckDx = puckSpeed;
     puckDy = puckSpeed;
+    keyCode = 0;
 }
 
 // Update the game state and redraw the game
@@ -193,5 +229,5 @@ function update()
 }
 
 // Set up the game loop
-setInterval(update, 20);
+setInterval(update, 1);
 
